@@ -37,9 +37,12 @@ public:
     virtual off_t lseek(off_t position, int whence);
     virtual int fsync();
     virtual off_t flen();
+    
+    virtual off_t seek(off_t position, int whence) { return lseek(position, whence); }
+    virtual off_t size() { return flen(); }
 
 protected:
-
+    
     FIL _fh;
 
 };

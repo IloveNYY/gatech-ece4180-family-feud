@@ -36,6 +36,12 @@ class FATDirHandle : public DirHandle {
     virtual off_t telldir();
     virtual void seekdir(off_t location);
 
+    virtual ssize_t read(struct dirent *ent);    
+    virtual int close() { return closedir(); };
+    virtual void seek(off_t offset) { seekdir(offset); };
+    virtual off_t tell() { return telldir(); };
+    virtual void rewind() { rewinddir(); };
+
  private:
     FATFS_DIR dir;
     struct dirent cur_entry;
