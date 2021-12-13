@@ -400,8 +400,8 @@ int main(){
 
     LCD.cls();
     LCD.locate(0,0);
-    LCD.printf("We have a winner:");
-    LCD.printf("\n\nCongrats ");
+    LCD.printf("Winner: Team ");
     LCD.printf(winningTeam.c_str());
-    LCD.printf("!!!");
+    LCD.printf("\n\nThank you");
+    LCD.printf("\nfor playing!");
 }
