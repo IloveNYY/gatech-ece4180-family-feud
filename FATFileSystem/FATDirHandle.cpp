@@ -30,8 +30,9 @@ FATDirHandle::FATDirHandle(const FATFS_DIR &the_dir) {
 }
 
 int FATDirHandle::closedir() {
+    int retval = f_closedir(&dir);
     delete this;
-    return 0;
+    return retval;
 }
 
 struct dirent *FATDirHandle::readdir() {
@@ -74,5 +75,15 @@ off_t FATDirHandle::telldir() {
 
 void FATDirHandle::seekdir(off_t location) {
     dir.index = location;
+}
+
+ssize_t FATDirHandle::read(struct dirent *ent) {
+    struct dirent *temp = readdir();
+    if (!temp) {
+        return 0;
+    }
+    
+    memcpy(ent, temp, sizeof(*ent));
+    return 1;
 }
 
