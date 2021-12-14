@@ -39,7 +39,7 @@ This project was created by students from the Georgia Institute of Technology fo
 
 | mbed | uLCD |
 | -- | --------- |
-| VU | 5V |
+| 5V (External) | 5V |
 | GND| GND |
 | P27 | TX |
 | P28 | RX |
