@@ -33,7 +33,7 @@ This project was created by students from the Georgia Institute of Technology fo
 ## How to Set Up
 
 * The block diagram for the hardware schematic can be found below:
-<img width="827" alt="Schematic" src="https://user-images.githubusercontent.com/94718462/145887019-2519a564-6d19-41d9-b08a-9a1a48d29927.png">
+<img width="825" alt="Screen Shot 2021-12-14 at 16 32 42" src="https://user-images.githubusercontent.com/94718462/146082745-db2b4de8-be50-4253-9233-b999d52d0c89.png">
 
 * uLCD Wiring:
 
@@ -51,7 +51,7 @@ This project was created by students from the Georgia Institute of Technology fo
 | --- | --------- | ------------------- |
 | GND | PWR-, In- | X |
 | 5V (External) | PWR+ | X |
-| P26 | In+ | X |
+| P18 | In+ | X |
 | X | Out+ | Speaker+ |
 | X | Out- | Speaker- |
 
@@ -77,6 +77,8 @@ This project was created by students from the Georgia Institute of Technology fo
 | P9 | RXI |
 
 * Pushbutton and LED Wiring:
+   * Pushbuttons have internal pull-up resistors.
+   * The LEDs have external pull-up resistors of 100Ω.
 
 | Component | mbed |
 | --------- | ---- |
@@ -84,6 +86,7 @@ This project was created by students from the Georgia Institute of Technology fo
 | LED A | P20 |
 | Buzzer B | P22 |
 | LED B | P21 |
+
 
 ## Game Logic
 
