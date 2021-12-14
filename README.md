@@ -37,12 +37,12 @@ This project was created by students from the Georgia Institute of Technology fo
 
 * uLCD Wiring:
 
-| mbed | uLCD |
-| -- | --------- |
-| 5V (External) | 5V |
-| GND| GND |
-| P27 | TX |
-| P28 | RX |
+| mbed | uLCD | uLCD Cable |
+| -- | --------- | ----|
+| 5V (External) | 5V | 5V |
+| GND | GND | GND |
+| RX = P27 | TX | RX |
+| TX = P28 | RX | TX
 | P30 | Reset |
 
 * Class D-Amp and Speaker Wiring:
@@ -51,7 +51,7 @@ This project was created by students from the Georgia Institute of Technology fo
 | --- | --------- | ------------------- |
 | GND | PWR-, In- | X |
 | 5V (External) | PWR+ | X |
-| P26 | IN+ | X |
+| P26 | In+ | X |
 | X | Out+ | Speaker+ |
 | X | Out- | Speaker- |
 
@@ -61,7 +61,7 @@ This project was created by students from the Georgia Institute of Technology fo
 | ---- | -------------- |
 | P8 | CS |
 | P5 | DI |
-| VOUT | VCC | 
+| Vout | Vcc | 
 | P7 | SCK | 
 | GND | GND | 
 | P6 | DO |
