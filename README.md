@@ -33,16 +33,16 @@ This project was created by students from the Georgia Institute of Technology fo
 ## How to Set Up
 
 * The block diagram for the hardware schematic can be found below:
-<img width="827" alt="Schematic" src="https://user-images.githubusercontent.com/94718462/145887019-2519a564-6d19-41d9-b08a-9a1a48d29927.png">
+<img width="825" alt="Screen Shot 2021-12-14 at 16 32 42" src="https://user-images.githubusercontent.com/94718462/146082745-db2b4de8-be50-4253-9233-b999d52d0c89.png">
 
 * uLCD Wiring:
 
-| mbed | uLCD |
-| -- | --------- |
-| VU | 5V |
-| GND| GND |
-| P27 | TX |
-| P28 | RX |
+| mbed | uLCD | uLCD Cable |
+| -- | --------- | ----|
+| 5V (External) | 5V | 5V |
+| GND | GND | GND |
+| RX = P27 | TX | RX |
+| TX = P28 | RX | TX
 | P30 | Reset |
 
 * Class D-Amp and Speaker Wiring:
@@ -51,7 +51,7 @@ This project was created by students from the Georgia Institute of Technology fo
 | --- | --------- | ------------------- |
 | GND | PWR-, In- | X |
 | 5V (External) | PWR+ | X |
-| P26 | IN+ | X |
+| P18 | In+ | X |
 | X | Out+ | Speaker+ |
 | X | Out- | Speaker- |
 
@@ -61,7 +61,7 @@ This project was created by students from the Georgia Institute of Technology fo
 | ---- | -------------- |
 | P8 | CS |
 | P5 | DI |
-| VOUT | VCC | 
+| Vout | Vcc | 
 | P7 | SCK | 
 | GND | GND | 
 | P6 | DO |
@@ -77,6 +77,8 @@ This project was created by students from the Georgia Institute of Technology fo
 | P9 | RXI |
 
 * Pushbutton and LED Wiring:
+   * Pushbuttons have internal pull-up resistors.
+   * The LEDs have external pull-up resistors of 100Ω.
 
 | Component | mbed |
 | --------- | ---- |
