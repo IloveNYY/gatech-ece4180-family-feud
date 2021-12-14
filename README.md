@@ -32,8 +32,58 @@ This project was created by students from the Georgia Institute of Technology fo
 
 ## How to Set Up
 
-* Do this...
-* Maybe include pinouts and schematics?
+* The block diagram for the hardware schematic can be found below:
+<img width="827" alt="Schematic" src="https://user-images.githubusercontent.com/94718462/145887019-2519a564-6d19-41d9-b08a-9a1a48d29927.png">
+
+* uLCD Wiring:
+
+| mbed | uLCD |
+| -- | --------- |
+| VU | 5V |
+| GND| GND |
+| P27 | TX |
+| P28 | RX |
+| P30 | Reset |
+
+* Class D-Amp and Speaker Wiring:
+
+| mbed | TPA2005D1 | Speaker - PCB Mount |
+| --- | --------- | ------------------- |
+| GND | PWR-, In- | X |
+| 5V (External) | PWR+ | X |
+| P26 | IN+ | X |
+| X | Out+ | Speaker+ |
+| X | Out- | Speaker- |
+
+* SD Card Reader Wiring:
+
+| mbed | SD Card Reader |
+| ---- | -------------- |
+| P8 | CS |
+| P5 | DI |
+| VOUT | VCC | 
+| P7 | SCK | 
+| GND | GND | 
+| P6 | DO |
+| NC | CD |
+
+* Adafruit Bluetooth Wiring:
+
+| mbed | Adafruit Bluetooth | 
+| ---- | ------------------ |
+| 5V (External) | Vin |
+| GND | GND, CTS |
+| P10 | TXO |
+| P9 | RXI |
+
+* Pushbutton and LED Wiring:
+
+| Component | mbed |
+| --------- | ---- |
+| Buzzer A | P19 |
+| LED A | P20 |
+| Buzzer B | P22 |
+| LED B | P21 |
 
 ## Game Logic
 
