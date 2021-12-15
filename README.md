@@ -161,14 +161,14 @@ main.cpp
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 // RawSerial  pc(USBTX, USBRX); // mainly for testing
-//Note: dev is the Bluetooth module in this project
+// Note: dev is the Bluetooth module in this project
 RawSerial  dev(p9,p10); // should match bluetooth pin - see pinout section
 
 
-std::string btBuffer = "";//(used to store chars being read) (i.e. chars are added 1 at a time)
-std::string btInput = ""; // bluetooth console input (stores the input from judge as a string)
-std::string btInputPrev = ""; //used to check if btInput changed from previous value
-std::string msgPrompt = ""; //to be printed on BT console for jusdge to read
+std::string btBuffer = "";      // used to store chars being read (i.e. chars are added 1 at a time)
+std::string btInput = "";       // bluetooth console input (stores the input from judge as a string)
+std::string btInputPrev = "";   //used to check if btInput changed from previous value
+std::string msgPrompt = "";     //to be printed on BT console for jusdge to read
 
 // stores last character added to btBuffer
 char lastChar;
@@ -489,7 +489,6 @@ int main(){
     LCD.printf(msgPrompt.c_str());
     LCD.printf("\n\nThank you\nfor playing!");
 }
-
 
 ```
 
