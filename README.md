@@ -33,7 +33,7 @@ This project was created by students from the Georgia Institute of Technology fo
 ## How to Set Up
 
 * The block diagram for the hardware schematic can be found below:
-<img width="825" alt="Screen Shot 2021-12-14 at 16 32 42" src="https://user-images.githubusercontent.com/94718462/146082745-db2b4de8-be50-4253-9233-b999d52d0c89.png">
+<img width="812" alt="Screen Shot 2021-12-14 at 20 03 29" src="https://user-images.githubusercontent.com/94718462/146103865-fae97e4b-a4b7-45cc-afa8-feae4d1fe92d.png">
 
 * uLCD Wiring:
 
