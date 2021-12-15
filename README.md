@@ -96,7 +96,7 @@ This project was created by students from the Georgia Institute of Technology fo
 4. When the showdown music is over, the players can prepare to press their buzzer/pushbutton (while the judge asks the question).
 5. Whichever buzzer/pushbutton pressed first lights up their corresponding LED (e.g. 2 buzzers and 2 LEDs).
 6. The team that wins the showdown controls the round, etc...
-    * The real gameshow has other rules at this step, chich can be found [here](https://www.ultraboardgames.com/family-feud/game-rules.php).
+    * The real gameshow has other rules at this step, which can be found [here](https://www.ultraboardgames.com/family-feud/game-rules.php).
 7. Bluefruit Connect console asks the judge which team won the round. The judge will type A or B for the team that won the round.
 8. Bluefruit Connect console asks the judge how many points should be awarded to the team for that round. The judge enters the amount of points, which does not exceed 3 digits for any round (possible "invalid input" scenario)
 9. Repeat steps 2-8 until a team's score goes over 300 points.
