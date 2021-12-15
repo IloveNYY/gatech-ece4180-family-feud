@@ -64,15 +64,15 @@ This project was created by students from the Georgia Institute of Technology fo
 | ---- | -------------- |
 | P8 | CS |
 | P5 | DI |
-| Vout | Vcc | 
-| P7 | SCK | 
-| GND | GND | 
+| Vout | Vcc |
+| P7 | SCK |
+| GND | GND |
 | P6 | DO |
 | NC | CD |
 
 * Adafruit Bluetooth Wiring:
 
-| mbed | Adafruit Bluetooth | 
+| mbed | Adafruit Bluetooth |
 | ---- | ------------------ |
 | 5V (External) | Vin |
 | GND | GND, CTS |
@@ -80,8 +80,8 @@ This project was created by students from the Georgia Institute of Technology fo
 | P9 | RXI |
 
 * Pushbutton and LED Wiring:
-   * Pushbuttons have internal pull-up resistors.
-   * The LEDs have external pull-up resistors of 100Ω.
+  * Pushbuttons have internal pull-up resistors.
+  * The LEDs have external pull-up resistors of 100Ω.
 
 | Component | mbed |
 | --------- | ---- |
