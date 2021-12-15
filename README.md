@@ -9,7 +9,7 @@
 
 ## Overview
 
-We recreated the system of the popular game show Family Feud ©. We included sound effects, a buzzer system, a score display system, and a judging system. Everything runs on an ARM mbed in C++.
+We recreated the system of the popular game show Family Feud ©. We included sound effects, a buzzer system, a score display system, and a judging system. Everything runs on an ARM mbed LPC1768 in C++.
 
 This project was created by students from the Georgia Institute of Technology for ECE 4180: Embedded Systems Design.
 
@@ -17,19 +17,21 @@ This project was created by students from the Georgia Institute of Technology fo
 
 ## Hardware Used
 
-1. ARM mbed
+1. ARM mbed LPC1768
 2. Adafruit Bluefruit LE UART Friend - Bluetooth Low Energy (BLE)
-3. Any smartphone with the Bluefruit Connect app
+3. Any smartphone with the [Bluefruit Connect app](https://learn.adafruit.com/bluefruit-le-connect)
 4. SparkFun Mono Audio Amp Breakout - TPA2005D1
 5. Speaker - PCB Mount
-6. Momentary Pushbutton Switch - 12mm Square (2)
-7. LED - Basic Red 5mm (2)
+6. Momentary Pushbutton Switches - 12mm Square (2)
+7. Blue LEDs (2)
 8. SparkFun microSD Transflash Breakout
 9. Serial Miniature LCD Module - 1.44" (uLCD-144-G2 GFX)
 10. A large breadboard
-11. Two small breadboards
+11. Two small breadboards (one for each pushbutton)
 12. Jumper wires
-13. Two 100 Ohm resistors
+13. 100 Ohm resistor (2)
+
+* Note: Most parts listed above can be found at [SparkFun Electronics](https://www.sparkfun.com/).
 
 ## How to Set Up
 
