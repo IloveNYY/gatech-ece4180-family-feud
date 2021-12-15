@@ -3,7 +3,6 @@
 #include "uLCD_4DGL.h"
 #include "SDFileSystem.h"
 #include "wave_player.h"
-#include "PinDetect.h"
 #include <string>
 
 // Authors: Allen Ayala, Ruben Quiros, Tyrell Ramos-Lopez, and Rishab Tandon
