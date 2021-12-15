@@ -6,6 +6,9 @@
 #include "PinDetect.h"
 #include <string>
 
+// Authors: Allen Ayala, Ruben Quiros, Tyrell Ramos-Lopez, and Rishab Tandon
+// ECE 4180 - Fall 2021 (Section B)
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // Pin layout section
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +22,7 @@
 
 // TPA2005D1 (Class D Amp)
 // in-  -   gnd
-// in+  -   p26 (PWM)
+// in+  -   p26 (PWM) - p18 INSTEAD
 // pwr- -   gnd
 // pwr+ -   3.3V or 5V (recommend external 5V)
 // out- -   speaker-
@@ -46,23 +49,20 @@
 // Globals
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+// RawSerial  pc(USBTX, USBRX); // mainly for testing
+// Note: dev is the Bluetooth module in this project
+RawSerial  dev(p9,p10); // should match bluetooth pin - see pinout section
 
-// Adafruit BLE
-Serial bluemod(p9,p10); // see pinout section
 
-RawSerial  pc(USBTX, USBRX); //mainly for testing
-RawSerial  dev(p9,p10); //should match bluetooth pin
+std::string btBuffer = "";      // used to store chars being read (i.e. chars are added 1 at a time)
+std::string btInput = "";       // bluetooth console input (stores the input from judge as a string)
+std::string btInputPrev = "";   //used to check if btInput changed from previous value
+std::string msgPrompt = "";     //to be printed on BT console for jusdge to read
 
-//bluetooth console buffer (used to store chars being read) (i.e. chars are added 1 at a time)
-std::string btBuffer = ""; 
-
-//bluetooth console input (stores the entire new line)
-//NOTE: Changes value after each new line
-std::string btInput = ""; 
-std::string msgPrompt = "";
-
+// stores last character added to btBuffer
 char lastChar;
 
+// stores the name of the winning team - a/A or b/B
 std::string winningTeam = "";
 
 // flags
@@ -82,26 +82,21 @@ volatile unsigned int teamScoreB = 0;
 volatile unsigned int roundNum = 0;
 
 // PushButtons (Buzzers)
-PinDetect buzzerA(p19);
-PinDetect buzzerB(p22);
+DigitalIn buzzerA(p19);
+DigitalIn buzzerB(p22);
 
 // LEDs
-DigitalOut ledA(p20);
-DigitalOut ledB(p21);
+DigitalOut ledA(p20); //20
+DigitalOut ledB(p21); //21
 
 // uLCD
 uLCD_4DGL LCD(p28, p27, p30); // see pinout section
 
-// mutex for getc and putc commands
+// mutex for getc, putc, printf, and accessing strings
 Mutex mut;
-
-
 
 // SD Card reader
 SDFileSystem sd(p5, p6, p7, p8, "sd"); // see pinout section
-
-// speaker output pin
-PwmOut speaker(p26); // see pinout section
 
 // DACout pin (not used, but needed for wave_player)
 AnalogOut DACout(p18);
@@ -119,7 +114,6 @@ void buzzerSound(){
     wave_file=fopen("/sd/family-feud-buzzer.wav", "r");
     waver.play(wave_file);
     fclose(wave_file);
-    wait(2); // buzzer = 2 second wait
 }
 
 // showdown sound effect
@@ -128,7 +122,6 @@ void showdownSound(){
     wave_file=fopen("/sd/family-feud-showdown.wav", "r");
     waver.play(wave_file);
     fclose(wave_file);
-    wait(4.5); // showdown = 4.5 second wait
 }
 
 // intro music sound effect
@@ -137,34 +130,35 @@ void introMusic(){
     wave_file=fopen("/sd/family-feud-intro.wav", "r");
     waver.play(wave_file);
     fclose(wave_file);
-    wait(28); // intro music = 28 second wait
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// Interrupts
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
-// when team A hits buzzer first
-void pb_hit_TeamA(void){
-    if(!buzzerHit){
-        buzzerHit = true;
-        ledA = 1;
-        buzzerSound();
-    }
-}
-
-// when team B hits buzzer first
-void pb_hit_TeamB(void){
-    if(!buzzerHit){
-        buzzerHit = true;
-        ledB = 1;
-        buzzerSound();
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // Threads
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
+// buzzer A thread
+void threadBuzzerA(void const *args){
+    while(true){
+        Thread::wait(100);
+        if((buzzerA == 0) && !buzzerHit){
+            buzzerHit = true;
+            ledA = 1;
+            buzzerSound();
+        }
+    }
+}
+
+// buzzer B thread
+void threadBuzzerB(void const *args){
+    while(true){
+        Thread::wait(100);
+        if((buzzerB == 0) && !buzzerHit){
+            buzzerHit = true;
+            ledB = 1;
+            buzzerSound();
+        } 
+    }
+}
 
 // LCD thread - displays round number and team scores
 void threadLCD(void const *args){
@@ -172,53 +166,55 @@ void threadLCD(void const *args){
         mut.lock();
         LCD.locate(0,0);
         LCD.printf("Welcome to Family Feud!");
-        LCD.printf("\n\nRound %u", roundNum);
+        LCD.printf("\n\nRound %d", roundNum);
         LCD.printf("\n\nScores");
-        LCD.printf("\nTeam A: %u  ", teamScoreA);
-        LCD.printf("\nTeam B: %u  ", teamScoreB);
+        LCD.printf("\nTeam A: %d  ", teamScoreA);
+        LCD.printf("\nTeam B: %d  ", teamScoreB);
         mut.unlock();
         Thread::wait(500);
     }
 }
 
-// threat for the bluetooth app console
-void threadBTConsole(void const *args){
+// thread for handling data from the bluetooth app console
+void threadBTReceive(void const *args){
     while(true){
-        
-        //print msg to console
-  
-        if(printToConsole){ //sends msgPrompt var to bluetooth console
-            mut.lock();
-            for(int i = 0; i < msgPrompt.length(); i++){
+        // lock to read/print strings
+        mut.lock();
+
+        // print msg to bluetooth console
+        if(printToConsole){ // sends msgPrompt var to bluetooth console
+            for(int i = 0; i < msgPrompt.length(); ++i){
                 dev.putc(msgPrompt[i]);
             }
-            mut.unlock();
             Thread::wait(100);
             printToConsole = false;
         }
 
         // team has not been chosen yet
-        if(!teamChosen && btInput.compare("") != 0){
+        if(startRound && !teamChosen && btInput.compare("") != 0){
             // check if correct team name has been sent
             if(!((btInput.compare("A") == 0) || (btInput.compare("B") == 0)
             || (btInput.compare("a") == 0) || (btInput.compare("b") == 0))){
-                msgPrompt = "Invalid team name!";
+                msgPrompt = "Invalid team name!\n";
                 printToConsole = true;
             }
             else{
                 winningTeam = btInput;
+                btInputPrev = btInput; // prevent following if statement from executing early
                 teamChosen = true;
             }
         }
         
         // team has won the round, but judge hasn't given points
-        if(teamChosen && !pointsAwarded){
+        if(teamChosen && !pointsAwarded && (btInput.compare(btInputPrev) != 0)){
+            // attempt to convert to integer
             unsigned int score = std::atoi(btInput.c_str());
             if(score){
                 if(score > 999){
                     // incorrect input
-                    msgPrompt = "Number is too big";
+                    msgPrompt = "Number is too big!\n";
                     printToConsole = true;
+                    btInputPrev = btInput;
                 }
                 else{
                     // correct input
@@ -234,57 +230,38 @@ void threadBTConsole(void const *args){
                 }
             }
             else{
-                msgPrompt = "Invalid input!";
-                printToConsole = true;
+                //prevent duplicate error messaging
+                if(msgPrompt.compare("Invalid input!\nPlease type an integer less than 1000:\n") != 0){
+                    msgPrompt = "Invalid input!\nPlease type an integer less than 1000:\n";
+                    printToConsole = true;
+                    btInputPrev = btInput;
+                }
             }
-
-            // try{
-            //     // attempt to convert to integer
-            //     unsigned int score = std::stoi(btInput, nullptr, 10);
-                
-            //     if(score > 1000){ //invalid input
-            //         msgPrompt = "Number is too big";
-            //         printToConsole = true;
-            //         pointsAwarded = true;
-            //     }
-            //     else{
-            //         if(winningTeam.compare("A") == 0){
-            //             teamScoreA += score;
-            //         }
-            //         else{
-            //             teamScoreB += score;
-            //         }
-            //     }  
-            // }
-            // catch(const std::invalid_argument& e){
-            //     msgPrompt = "Input is not an integer!"
-            //     printToConsole = true;
-            //     // std::cerr << e.what() << '\n';
-            // }
-            // catch(const std::out_of_range& e){
-            //     msgPrompt = "Number is too big!"
-            //     printToConsole = true;
-            //     // std::cerr << e.what() << '\n';
-            // }
         }
+        // unlock mutex
+        mut.unlock();
     }
 }
 
-//reads input from Mbed Bluetooth app terminal
-void dev_recv() {
-    while(dev.readable()){
-        //pc.putc(dev.getc());
-        lastChar = dev.getc();
-        btBuffer += lastChar;
+// thread for sending data to the bluetooth app console
+void threadBTSend(void const *args){
+    while(true){
+        mut.lock();
+        while(dev.readable()){
+            // pc.putc(dev.getc()); // for testing purposes
+            lastChar = dev.getc();
+            btBuffer.push_back(lastChar);
+        }
+
+        if (lastChar == '\n'){
+            btBuffer = btBuffer.substr(0, btBuffer.length() - 1);
+            // pc.printf(btBuffer.c_str()); // for testing purposes
+            btInput = btBuffer;
+            btBuffer = "";
+        }
+        mut.unlock();
+        // Thread::wait(100);
     }
-    if(lastChar == '\n'){
-        pc.printf(btBuffer.c_str());
-        pc.printf("--\n");
-        btInput = btBuffer;
-        // btInput = btInput.c_str().toupper(); //ensures we only need to parse uppercase strings
-        btBuffer= ""; //rest buffer to recieve new Line
-    }
-//    pc.printf("finished reading\n");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -292,24 +269,18 @@ void dev_recv() {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 int main(){
     
+    // initialize baud rates
     dev.baud(9600);
-    pc.baud(9600);
+    // pc.baud(9600); // for testing purposes
     LCD.baudrate(9600);
-    
-    dev.attach(&dev_recv, Serial::RxIrq); //attach interrupt method to bt message
-    
-    // buzzerA.mode(PullUp);
-    // buzzerB.mode(PullUp);
-
-    buzzerA.mode(PullDown);
-    buzzerB.mode(PullDown);
-    
-    // setup Buzzer interrupts
-    buzzerA.attach_deasserted(&pb_hit_TeamA);
-    buzzerB.attach_deasserted(&pb_hit_TeamB);
-    
+        
+    // set pull up mode on pushbuttons
+    buzzerA.mode(PullUp);
+    buzzerB.mode(PullUp);
+    wait(0.1);
+        
     // playIntroMusic
-    //introMusic();
+    introMusic();
     
     // clear and setup uLCD
     LCD.cls();
@@ -317,91 +288,93 @@ int main(){
 
     // start LCD thread
     Thread t1(threadLCD);
-    Thread t2(threadBTConsole);    
+    Thread t2(threadBTReceive);  
+    Thread t3(threadBTSend);  
+    Thread t4(threadBuzzerA);
+    Thread t5(threadBuzzerB);
 
-    // start game
+    // start game - game ends when a team gets more than 300 points
     while((teamScoreA < 300) && ((teamScoreB < 300))){
         
-        //reset flags for the new round
-        // startGame = false; // might not need
-        // startRound = false;
+        // reset variables for the new round
+        btInput = "";
+        startRound = false;
         buzzerHit = false;
         playBuzzerSound = false;
         teamChosen = false;
         pointsAwarded = false;
+        ledA = 0;
+        ledB = 0;
 
         // bluetooth console prompts judge to start the round
-        msgPrompt = "Insert anything to start...\n";
+        mut.lock();
+        msgPrompt = "Type \"start\" to begin the round...\n";
         printToConsole = true;
+        mut.unlock();
         
-        // wait for judge to start round
-        
-        // while(true){
-        //     msgPrompt = btInput;
-        //     printToConsole = true;
-        //     wait(1);
-        // }
-
+        // wait for judge to start round        
         do{
-            wait(1);
-            teamScoreA++;
-            teamScoreB+= 2;
-        } while(true);
-        // } while (btInput.compare("") == 0);
-        
-        
-        // do{
-            // Thread::yield();
-        // } while (btInput.compare("") == 0);
+        } while (btInput.compare("start") != 0);
+        startRound = true;
 
-        msgPrompt = "Passed initial yield..\n";
+        mut.lock();
+        msgPrompt = "Round has been started...\n";
         printToConsole = true;
+        mut.unlock();
 
         // increment round num
         ++roundNum;
 
         // play showdown music
         showdownSound();
-        msgPrompt = "Played showdown MUS..\n";
+        mut.lock();
+        msgPrompt = "Played showdown music...\nWaiting for buzzer to be pressed\n";
         printToConsole = true;
+        mut.unlock();
 
         // wait for buzzer to be pressed
         do{
-            Thread::yield();
         } while (!buzzerHit);
 
         // bluetooth console prompts judge to say which team won the round
-        // which team won the round?
-
-        msgPrompt = "Insert the Team that won the round:\n";
+        mut.lock();
+        msgPrompt = "Insert the Team that won the round: \n";
         printToConsole = true;
+        mut.unlock();
 
         // wait for judge to say which team won the round
         do{
-            Thread::yield();
         } while(!teamChosen);
-        // } while ((btInput.compare("A") == 0) || (btInput.compare("B") == 0));    // flag = !teamChosen    
 
         // bluetooth console prompts judge to input number of points
-        msgPrompt = "How many points won?\n";
+        mut.lock();
+        msgPrompt = "Insert number of points won: \n";
         printToConsole = true;
+        mut.unlock();
 
         // wait for judge to award points to the winning team
         do{
-            Thread::yield();
         } while(!pointsAwarded);
-        // } while (std::stoi(btInput, nullptr, 10) < 999); // 
+    
     }
     
-    //End of Game
-
+    // End of Game message to judge's screen
+    mut.lock();
+    msgPrompt = "Winner: Team " + winningTeam + "\n";
+    printToConsole = true;
+    mut.unlock();
+    Thread::wait(3000);
+    
+    // terminate threads
     t1.terminate();
     t2.terminate();
+    t3.terminate();
+    t4.terminate();
+    t5.terminate();
 
+    // End of Game message to LCD screen
     LCD.cls();
     LCD.locate(0,0);
-    LCD.printf("Winner: Team ");
-    LCD.printf(winningTeam.c_str());
-    LCD.printf("\n\nThank you");
-    LCD.printf("\nfor playing!");
+    LCD.printf(msgPrompt.c_str());
+    LCD.printf("\n\nThank you\nfor playing!");
 }
