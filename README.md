@@ -9,7 +9,7 @@
 
 ## Overview
 
-We recreated the system of the popular game show Family Feud ©. We included sound effects, a buzzer system, a score display system, and a judging system. Everything runs on an ARM mbed in C++.
+We recreated the system of the popular game show Family Feud ©. We included sound effects, a buzzer system, a score display system, and a judging system. Everything runs on an ARM mbed LPC1768 in C++.
 
 This project was created by students from the Georgia Institute of Technology for ECE 4180: Embedded Systems Design.
 
@@ -17,23 +17,26 @@ This project was created by students from the Georgia Institute of Technology fo
 
 ## Hardware Used
 
-1. ARM mbed
+1. ARM mbed LPC1768
 2. Adafruit Bluefruit LE UART Friend - Bluetooth Low Energy (BLE)
-3. Any smartphone with the Bluefruit Connect app
+3. Any smartphone with the [Bluefruit Connect app](https://learn.adafruit.com/bluefruit-le-connect)
 4. SparkFun Mono Audio Amp Breakout - TPA2005D1
 5. Speaker - PCB Mount
-6. Momentary Pushbutton Switch - 12mm Square (2)
-7. LED - Basic Red 5mm (2)
+6. Momentary Pushbutton Switches - 12mm Square (2)
+7. Blue LEDs (2)
 8. SparkFun microSD Transflash Breakout
 9. Serial Miniature LCD Module - 1.44" (uLCD-144-G2 GFX)
 10. A large breadboard
-11. Two small breadboards
+11. Two small breadboards (one for each pushbutton)
 12. Jumper wires
+13. 100 Ohm resistor (2)
+
+* Note: Most parts listed above can be found at [SparkFun Electronics](https://www.sparkfun.com/).
 
 ## How to Set Up
 
 * The block diagram for the hardware schematic can be found below:
-<img width="812" alt="Screen Shot 2021-12-14 at 20 03 29" src="https://user-images.githubusercontent.com/94718462/146103865-fae97e4b-a4b7-45cc-afa8-feae4d1fe92d.png">
+<img width="812" alt="Screen Shot 2021-12-14 at 20 03 29" src="https://user-images.githubusercontent.com/94718462/146103771-3e96d75e-c870-46d7-9df8-c0754575167e.png">
 
 * uLCD Wiring:
 
@@ -87,7 +90,6 @@ This project was created by students from the Georgia Institute of Technology fo
 | Buzzer B | P22 |
 | LED B | P21 |
 
-
 ## Game Logic
 
 1. Game begins, and intro music plays to completion.
@@ -96,11 +98,11 @@ This project was created by students from the Georgia Institute of Technology fo
 4. When the showdown music is over, the players can prepare to press their buzzer/pushbutton (while the judge asks the question).
 5. Whichever buzzer/pushbutton pressed first lights up their corresponding LED (e.g. 2 buzzers and 2 LEDs).
 6. The team that wins the showdown controls the round, etc...
-    * The real gameshow has other rules at this step, chich can be found [here](https://www.ultraboardgames.com/family-feud/game-rules.php).
+    * The real gameshow has other rules at this step, which can be found [here](https://www.ultraboardgames.com/family-feud/game-rules.php).
 7. Bluefruit Connect console asks the judge which team won the round. The judge will type A or B for the team that won the round.
 8. Bluefruit Connect console asks the judge how many points should be awarded to the team for that round. The judge enters the amount of points, which does not exceed 3 digits for any round (possible "invalid input" scenario)
 9. Repeat steps 2-8 until a team's score goes over 300 points.
-    * Note: Most games last four rounds. However, if a team does not reach 300 points after the 4th round, then a 5th "sudden death showdown" round must be played to determine the winner.
+    * Note: Most games last 4 rounds. However, if a team does not reach 300 points after the 4th round, then a 5th "sudden death showdown" round must be played to determine the winner.
 
 ## Code
 
