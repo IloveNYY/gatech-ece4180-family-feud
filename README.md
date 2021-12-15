@@ -29,6 +29,7 @@ This project was created by students from the Georgia Institute of Technology fo
 10. A large breadboard
 11. Two small breadboards
 12. Jumper wires
+13. Two 100 Ohm resistors
 
 ## How to Set Up
 
