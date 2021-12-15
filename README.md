@@ -102,7 +102,7 @@ This project was created by students from the Georgia Institute of Technology fo
 7. Bluefruit Connect console asks the judge which team won the round. The judge will type A or B for the team that won the round.
 8. Bluefruit Connect console asks the judge how many points should be awarded to the team for that round. The judge enters the amount of points, which does not exceed 3 digits for any round (possible "invalid input" scenario)
 9. Repeat steps 2-8 until a team's score goes over 300 points.
-    * Note: Most games last four rounds. However, if a team does not reach 300 points after the 4th round, then a 5th "sudden death showdown" round must be played to determine the winner.
+    * Note: Most games last 4 rounds. However, if a team does not reach 300 points after the 4th round, then a 5th "sudden death showdown" round must be played to determine the winner.
 
 ## Code
 
