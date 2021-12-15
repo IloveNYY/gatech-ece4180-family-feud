@@ -13,7 +13,15 @@ We recreated the system of the popular game show Family Feud ©. We included sou
 
 This project was created by students from the Georgia Institute of Technology for ECE 4180: Embedded Systems Design.
 
-* Note: We do not claim any of the sound effects used in this project. The theme music and buzzer sound is owned by the creators of Family Feud ©.
+> **Note:** We do not claim any of the sound effects used in this project. The theme music and buzzer sound is owned by the creators of Family Feud ©.
+
+## About This Repository
+
+The main branch was created by manually exporting each file and folder individually from our mbed compiler repo.
+
+The develop branch was created by using the option to export to a zip archive from our mbed repo.
+
+If you would like to export our repo using the mbed compiler, our repo can be found at the following link: https://os.mbed.com/users/rquiros6/code/gatech-ece4180-finalProject/
 
 ## Hardware Used
 
@@ -31,7 +39,7 @@ This project was created by students from the Georgia Institute of Technology fo
 12. Jumper wires
 13. 100 Ohm resistor (2)
 
-* Note: Most parts listed above can be found at [SparkFun Electronics](https://www.sparkfun.com/).
+> **Note:** Most parts listed above can be found at [SparkFun Electronics](https://www.sparkfun.com/).
 
 ## How to Set Up
 
